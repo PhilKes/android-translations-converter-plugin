@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "Running Gradle task: exportTranslationsToExcel"
+./gradlew exportTranslationsToExcel
+
+if [ $? -ne 0 ]; then
+    echo "Gradle task 'exportTranslationsToExcel' failed. Please fix the issues."
+    exit 1
+fi
+
+echo "Gradle task 'exportTranslationsToExcel' completed successfully."
