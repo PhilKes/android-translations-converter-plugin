@@ -6,7 +6,7 @@ Useful if your translations are created by non-technical/external translators wh
 ## Features
 
 * Export from android project's `strings.xml` files to a single, formatted Excel File
-* Import `strings.xml` files from given Excel File
+* Import `strings.xml` files from given Excel File into corresponding `values` subfolders
 * Supports [Android quantity strings (plurals)](https://developer.android.com/guide/topics/resources/string-resource#Plurals)
 
 ## Setup
@@ -18,7 +18,7 @@ plugins {
 }
 ```
 
-## Export to Excel
+## Export
 
 Configuration in `build.gradle` (shown values are the defaults):
 ```groovy
@@ -46,6 +46,8 @@ tasks.named("exportTranslationsToExcel", ExportToExcelTask) {
 }
 ```
 
+Run `./gradlew exportTranslationsToExcel`
+
 ### Example Excel
 
 This is an example exported Excel Sheet:
@@ -58,6 +60,35 @@ To preview a full exported Excel file [click here](https://github.com/PhilKes/an
 Android supports [quantity strings (plurals)](https://developer.android.com/guide/topics/resources/string-resource#Plurals).
 To support these plurals, for every `<plurals>` in the `strings.xml` there are multiple for all of the supported quantities.
 The keys for these plurals have appended `_PLURALS_{QUANTITY}` to differentiate them. There is always a row for every possible quantity, doesn't matter if there is an existing translation in a language or not. If the default language does not specify a translations for a certain quantity, this row is highlighted in yellow with a corresponding comment.
+
+
+## Import
+
+Configuration in `build.gradle` (shown values are the defaults):
+```groovy
+tasks.named("importTranslationsFromExcel", ImportFromExcelTask) {
+   /**
+    * Input Excel File containing translations.
+    * Format:
+    * * The first row: Key (translation-key), 'Translatable' (true/false), folder-names/languages (e.g. 'values-de')
+    * * Each other row represents one translation-key and its translations in the available languages
+    * * For plurals, for every possible quantity (see [PLURALS_QUANTITIES]) there is a separate row with Key: `{KEY}_PLURALS_{QUANTITY}`
+    */
+    inputFile = project.file("translations.xlsx")
+
+   /**
+    * Folder to import to.
+    * For every folder-name/language a subfolder will be created and its corresponding `strings.xml` generated.
+    */
+    outputFile = project.file("app/src/main/res/")
+}
+```
+
+Run `./gradlew importTranslationsFromExcel`
+
+To preview the output see [app/src/main/res](./src/test/resources/app/src/main/res) folder
+
+ ---
 
 ### Automate Export via pre-commit Hook
 

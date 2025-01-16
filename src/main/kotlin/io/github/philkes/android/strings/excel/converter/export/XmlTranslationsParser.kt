@@ -1,7 +1,6 @@
 package io.github.philkes.android.strings.excel.converter.export
 
-import io.github.philkes.android.strings.excel.converter.AndroidTranslation
-import io.github.philkes.android.strings.excel.converter.AndroidTranslations
+import io.github.philkes.android.strings.excel.converter.*
 import org.gradle.api.logging.Logger
 import org.gradle.internal.logging.progress.ProgressLogger
 import org.w3c.dom.Element
@@ -45,7 +44,7 @@ class XmlTranslationsParser(private val progressLogger: ProgressLogger) {
                     }
                 }
             }
-            progressLogger.progress("Parsed $idx of ${sortedFiles.size} xml files")
+            progressLogger.progress("Parsed ${idx+1} of ${sortedFiles.size} xml files")
         }
         progressLogger.completed()
         return AndroidTranslations(translations, folderNames)
@@ -80,16 +79,4 @@ class XmlTranslationsParser(private val progressLogger: ProgressLogger) {
         }
     }
 
-    companion object{
-        private const val STRING_XML_TAG = "string"
-        private const val PLURALS_XML_TAG = "plurals"
-        private const val ITEM_XML_TAG = "item"
-
-        private const val NAME_XML_ATTRIBUTE = "name"
-        private const val TRANSLATABLE_XML_ATTRIBUTE = "translatable"
-        private const val QUANTITY_XML_ATTRIBUTE = "quantity"
-        private val PLURALS_QUANTITIES = listOf("few", "many", "one", "other", "two", "zero")
-
-        const val PLURALS_KEY_MARKER = "_PLURALS_"
-    }
 }

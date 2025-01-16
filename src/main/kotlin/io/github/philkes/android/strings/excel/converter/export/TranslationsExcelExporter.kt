@@ -2,13 +2,12 @@ package io.github.philkes.android.strings.excel.converter.export
 
 import io.github.philkes.android.strings.excel.converter.AndroidTranslation
 import io.github.philkes.android.strings.excel.converter.AndroidTranslations
-import io.github.philkes.android.strings.excel.converter.export.XmlTranslationsParser.Companion.PLURALS_KEY_MARKER
+import io.github.philkes.android.strings.excel.converter.PLURALS_KEY_MARKER
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.XSSFColor
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.gradle.internal.logging.progress.ProgressLogger
-import org.slf4j.Logger
 import java.awt.Color
 import java.io.File
 
@@ -52,7 +51,7 @@ class TranslationsExcelExporter(
             translations.languageFolders.forEach { folderName ->
                 row.createCell(colIndex++).setCellValue(translation.values[folderName] ?: "")
             }
-            progressLogger.progress("Processed $index of ${translations.translations.size} translations")
+            progressLogger.progress("Processed ${index+1} of ${translations.translations.size} translations")
         }
         return sheet
     }

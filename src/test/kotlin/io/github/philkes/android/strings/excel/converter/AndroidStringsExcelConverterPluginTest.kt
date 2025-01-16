@@ -1,10 +1,12 @@
 package io.github.philkes.android.strings.excel.converter
 
 import io.github.philkes.android.strings.excel.converter.AndroidStringsExcelConverterPlugin.Companion.EXPORT_TASK_NAME
+import io.github.philkes.android.strings.excel.converter.AndroidStringsExcelConverterPlugin.Companion.IMPORT_TASK_NAME
 import io.github.philkes.android.strings.excel.converter.export.ExportToExcelTask
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.gradle.internal.impldep.junit.framework.AssertionFailedError
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -15,6 +17,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.io.FileInputStream
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
+import java.util.*
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.isSameFileAs
+import kotlin.io.path.name
 
 
 class AndroidStringsExcelConverterPluginTest {
@@ -43,7 +54,6 @@ class AndroidStringsExcelConverterPluginTest {
              inputDirectory = file("${javaClass.classLoader.getResource("app/src/main/res")!!.path}")
          }
       """.trimIndent()
-
         buildFile.writeText(buildFileContent)
 
         val result = GradleRunner.create()
@@ -59,6 +69,40 @@ class AndroidStringsExcelConverterPluginTest {
         assertTrue(outputFile.length() > 0, "outputFile is empty")
         assertTrue(compareExcelFiles(File(javaClass.classLoader.getResource("expected.xlsx")!!.path),outputFile), "outputFile's contents are not as expected")
 
+    }
+
+    @Test
+    fun importTranslationsFromExcel() {
+        val outputDirectory = File(testProjectDir, "output")
+        val buildFileContent = """
+         import ${ImportFromExcelTask::class.java.name}
+            
+         plugins {
+            id("io.github.philkes.android-strings-excel-converter")
+         }
+         
+         tasks.named<${ImportFromExcelTask::class.java.simpleName}>("$IMPORT_TASK_NAME") {
+             inputFile = file("${javaClass.classLoader.getResource("expected.xlsx")!!.path}")
+             outputDirectory = file("${outputDirectory.path}")
+         }
+      """.trimIndent()
+        buildFile.writeText(buildFileContent)
+
+        val result = GradleRunner.create()
+            .withProjectDir(testProjectDir)
+            .withArguments(IMPORT_TASK_NAME)
+            .withPluginClasspath()
+            .forwardOutput()
+            .build()
+
+        assertEquals(
+            SUCCESS,
+            result.task(":$IMPORT_TASK_NAME")?.outcome ?: FAILED,
+            "'$IMPORT_TASK_NAME' gradle task failed"
+        )
+        val expectedOutputDirectory =
+            File(javaClass.classLoader.getResource("app/src/main/res")!!.path).toPath()
+        expectedOutputDirectory.assertContentsEqual(outputDirectory.toPath())
     }
 
     private fun compareExcelFiles(file1: File, file2: File): Boolean {
@@ -81,7 +125,7 @@ class AndroidStringsExcelConverterPluginTest {
                         return false
                     }
                     for (cellIndex in 0 until row1.physicalNumberOfCells) {
-                        if (!row1.getCell(cellIndex).isEqualTo(row2.getCell(cellIndex))) {
+                        if (!row1.getCell(cellIndex).assertContentsEqual(row2.getCell(cellIndex))) {
                             return false
                         }
                     }
@@ -97,5 +141,42 @@ class AndroidStringsExcelConverterPluginTest {
         }
     }
 
-    private fun Cell?.isEqualTo(other: Cell?)= this?.stringCellValue?.equals(other?.stringCellValue) ?: false
+    private fun Cell?.assertContentsEqual(other: Cell?) =
+        this?.stringCellValue?.equals(other?.stringCellValue) ?: false
+
+    private fun Path.assertContentsEqual(other: Path) {
+        Files.walkFileTree(this, object : SimpleFileVisitor<Path>() {
+            override fun visitFile(
+                file: Path,
+                attrs: BasicFileAttributes
+            ): FileVisitResult {
+                val result: FileVisitResult = super.visitFile(file, attrs)
+
+                val relativize: Path = this@assertContentsEqual.relativize(file)
+                val fileInOther: Path = other.resolve(relativize)
+                assertEquals(file.name, fileInOther.name, "File names differ")
+                if(file.isRegularFile()){
+                    assertEquals(file.parent.name, fileInOther.parent.name, "File folders differ")
+                    assertTrue(Files.mismatch(file, fileInOther) == -1L){ file.diff(fileInOther)}
+                }
+                return result
+            }
+        })
+    }
+}
+
+private fun Path.diff(fileInOther: Path): String {
+    val string = StringBuilder("Expected '$this' to be equal to '$fileInOther':")
+    var lineCounter = 0
+    val input1 = Scanner(this.toFile())
+    val input2 = Scanner(fileInOther.toFile())
+    while (input1.hasNextLine() && input2.hasNextLine()) {
+        lineCounter++
+        val first = input1.nextLine()
+        val second = input2.nextLine()
+        if (!first.equals(second)) {
+            string.append("\n\nLine $lineCounter:\nExpected:\n$first\nActual:\n$second")
+        }
+    }
+    return string.toString()
 }

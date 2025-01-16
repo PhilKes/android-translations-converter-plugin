@@ -1,11 +1,8 @@
-import io.github.philkes.android.strings.excel.converter.export.ExportToExcelTask
-
 plugins {
     `kotlin-dsl`
     kotlin("jvm") version "2.0.20"
     `java-gradle-plugin`
     `maven-publish`
-    id("io.github.philkes.android-strings-excel-converter") version "1.0.0"
 }
 
 group = "io.github.philkes"
@@ -14,10 +11,6 @@ version = "1.0.0"
 repositories {
     mavenCentral()
     mavenLocal()
-}
-
-tasks.named<ExportToExcelTask>("exportTranslationsToExcel") {
-    inputDirectory = file("/home/user/AndroidStudioProjects/tools/android-strings-excel-converter/src/test/resources/app/src/main/res")
 }
 
 dependencies {
