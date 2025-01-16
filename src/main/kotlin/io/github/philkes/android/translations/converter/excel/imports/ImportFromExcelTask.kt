@@ -28,7 +28,7 @@ open class ImportFromExcelTask : DefaultTask() {
     var inputFile: File = project.file("translations.xlsx")
 
     /**
-     * Folder to import to.
+     * Folder to import into.
      * For every folder-name/language a subfolder will be created and its corresponding `strings.xml` generated.
      *
      * (Defaults to `{PROJECT_DIR}//src/main/res/`)

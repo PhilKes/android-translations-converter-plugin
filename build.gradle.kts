@@ -3,6 +3,7 @@ plugins {
     kotlin("jvm") version "2.0.20"
     `java-gradle-plugin`
     `maven-publish`
+    id("com.gradle.plugin-publish") version "1.3.0"
 }
 
 group = "io.github.philkes"
@@ -34,16 +35,16 @@ kotlin {
 }
 
 gradlePlugin {
+    website = "https://github.com/PhilKes/android-translations-converter-plugin"
+    vcsUrl = "https://github.com/PhilKes/android-translations-converter-plugin"
+    description = "Easily convert Android strings.xml files to Excel and back"
     plugins {
-        register("androidStringsExcelConverter") {
+        create("androidTranslationsConverter") {
             id = "io.github.philkes.android-translations-converter"
+            displayName = "Android Translations Converter"
+            description = "Easily convert Android translations to Excel and back"
+            tags = listOf("android", "translation", "xml", "excel", "converter")
             implementationClass = "io.github.philkes.android.translations.converter.AndroidTranslationsConverterPlugin"
         }
-    }
-}
-
-publishing {
-    repositories {
-        mavenLocal()
     }
 }

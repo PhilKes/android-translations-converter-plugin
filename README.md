@@ -1,21 +1,22 @@
 # Android Translations Converter
 
 Plug'n'Play gradle plugin for your Android projects to convert between Android `strings.xml` translations and Excel.
-Useful if your translations are created by non-technical/external translators who prefer to use Excel sheets.
+Useful if your translations are created by non-technical/external translators who prefer to use Excel.
 
 ## Features
 
-* Export from android project's `strings.xml` files to a single, formatted Excel File
-* Import `strings.xml` files from given Excel File into corresponding `values` subfolders
+* Export from Android project's `strings.xml` files to a single, formatted Excel file
+* Import `strings.xml` files from given Excel file into corresponding `values` subfolders
 * Supports [Android quantity strings (plurals)](https://developer.android.com/guide/topics/resources/string-resource#Plurals)
 * Correctly escapes/unescapes special characters + HTML tags in `strings.xml` and Excel
+* User-Friendly Excel sheet formatting including highlight missing translations, useful auto-filters and comments
 
 ## Setup
 
 In `build.gradle`:
 ```groovy
 plugins {
-    id 'io.github.philkes.android-translations-converter'
+    id("io.github.philkes.android-translations-converter") version "1.0.0"
 }
 ```
 
@@ -35,13 +36,7 @@ tasks.named("exportTranslationsToExcel", ExportToExcelTask) {
     outputFile = project.file("translations.xlsx")
 
    /**
-    * Whether the exported Excel sheet should be formatted.
-    * If set to `true`, this will:
-    * * Highlight missing translations in light red
-    * * Hide non-translatable keys/rows from the user
-    * * Add helpful comments to plural quantity keys
-    * * Add Auto-Filters to every column header for easy filtering for e.g. all missing translations
-    * * Freeze the Key and default language ('values') columns
+    * Whether the exported Excel sheet should be formatted to make it more user-friendly.
     */
     formatExcel = true
 }
@@ -70,15 +65,11 @@ Configuration in `build.gradle` (shown values are the defaults):
 tasks.named("importTranslationsFromExcel", ImportFromExcelTask) {
    /**
     * Input Excel File containing translations.
-    * Format:
-    * * The first row: Key (translation-key), 'Translatable' (true/false), folder-names/languages (e.g. 'values-de')
-    * * Each other row represents one translation-key and its translations in the available languages
-    * * For plurals, for every possible quantity (see [PLURALS_QUANTITIES]) there is a separate row with Key: `{KEY}_PLURALS_{QUANTITY}`
     */
     inputFile = project.file("translations.xlsx")
 
    /**
-    * Folder to import to.
+    * Folder to import into.
     * For every folder-name/language a subfolder will be created and its corresponding `strings.xml` generated.
     */
     outputFile = project.file("src/main/res/")
@@ -105,7 +96,8 @@ In `build.gradle`:
 preBuild.dependsOn exportTranslationsToExcel
 ```
 
-#### Execute as pre-commit hook
+#### Add as pre-commit hook
+
 1. Copy [pre-commit folder](./pre-commit) to the root of your project
 2. In `build.gradle`:
     ```groovy
@@ -122,3 +114,4 @@ preBuild.dependsOn exportTranslationsToExcel
     }
     preBuild.dependsOn installLocalGitHooks
     ```
+3. Whenever you commit you changes the export Excel will be kept up-to-date
