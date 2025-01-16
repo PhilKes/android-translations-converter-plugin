@@ -1,8 +1,8 @@
-package io.github.philkes.android.strings.excel.converter.export
+package io.github.philkes.android.translations.converter.excel.export
 
-import io.github.philkes.android.strings.excel.converter.AndroidTranslation
-import io.github.philkes.android.strings.excel.converter.AndroidTranslations
-import io.github.philkes.android.strings.excel.converter.PLURALS_KEY_MARKER
+import io.github.philkes.android.translations.converter.AndroidTranslation
+import io.github.philkes.android.translations.converter.AndroidTranslations
+import io.github.philkes.android.translations.converter.PLURALS_KEY_MARKER
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.XSSFColor

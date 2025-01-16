@@ -1,7 +1,7 @@
 package io.github.philkes.android.strings.excel.converter
 
-import io.github.philkes.android.strings.excel.converter.imports.ExcelTranslationParser
-import io.github.philkes.android.strings.excel.converter.imports.TranslationsXmlImporter
+import io.github.philkes.android.translations.converter.excel.imports.ExcelTranslationParser
+import io.github.philkes.android.translations.converter.excel.imports.TranslationsXmlImporter
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputDirectory

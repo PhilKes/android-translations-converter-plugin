@@ -1,9 +1,9 @@
-package io.github.philkes.android.strings.excel.converter.imports
+package io.github.philkes.android.translations.converter.excel.imports
 
-import io.github.philkes.android.strings.excel.converter.AndroidTranslation
-import io.github.philkes.android.strings.excel.converter.AndroidTranslations
-import io.github.philkes.android.strings.excel.converter.LanguageFolderName
-import io.github.philkes.android.strings.excel.converter.TranslationKey
+import io.github.philkes.android.translations.converter.AndroidTranslation
+import io.github.philkes.android.translations.converter.AndroidTranslations
+import io.github.philkes.android.translations.converter.LanguageFolderName
+import io.github.philkes.android.translations.converter.TranslationKey
 import org.apache.poi.openxml4j.util.ZipSecureFile
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.gradle.internal.logging.progress.ProgressLogger

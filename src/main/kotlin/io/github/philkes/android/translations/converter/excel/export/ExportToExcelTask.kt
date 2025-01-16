@@ -1,4 +1,4 @@
-package io.github.philkes.android.strings.excel.converter.export
+package io.github.philkes.android.translations.converter.excel.export
 
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.*

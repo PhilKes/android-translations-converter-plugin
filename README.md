@@ -1,4 +1,4 @@
-# AndroidStringsExcelConverter
+# Android Translations Converter
 
 Plug'n'Play gradle plugin for your Android projects to convert between Android `strings.xml` translations and Excel.
 Useful if your translations are created by non-technical/external translators who prefer to use Excel sheets.
@@ -15,7 +15,7 @@ Useful if your translations are created by non-technical/external translators wh
 In `build.gradle`:
 ```groovy
 plugins {
-    id 'io.github.philkes.android-strings-excel-converter'
+    id 'io.github.philkes.android-translations-converter'
 }
 ```
 
@@ -54,7 +54,7 @@ Run `./gradlew exportTranslationsToExcel`
 This is an example exported Excel Sheet:
 <img src="./doc/example_excel.png" alt="example-excel" /> 
 
-To preview a full exported Excel file [click here](https://github.com/PhilKes/android-strings-excel-converter/raw/refs/heads/main/src/test/resources/expected.xlsx)
+To preview a full exported Excel file [click here](https://github.com/PhilKes/android-translations-converter/raw/refs/heads/main/src/test/resources/expected.xlsx)
 
 #### Plurals
 

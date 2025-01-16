@@ -36,8 +36,8 @@ kotlin {
 gradlePlugin {
     plugins {
         register("androidStringsExcelConverter") {
-            id = "io.github.philkes.android-strings-excel-converter"
-            implementationClass = "io.github.philkes.android.strings.excel.converter.AndroidStringsExcelConverterPlugin"
+            id = "io.github.philkes.android-translations-converter"
+            implementationClass = "io.github.philkes.android.translations.converter.AndroidTranslationsConverterPlugin"
         }
     }
 }

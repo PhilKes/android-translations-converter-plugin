@@ -1,12 +1,12 @@
-package io.github.philkes.android.strings.excel.converter
+package io.github.philkes.android.translations.converter.excel
 
-import io.github.philkes.android.strings.excel.converter.AndroidStringsExcelConverterPlugin.Companion.EXPORT_TASK_NAME
-import io.github.philkes.android.strings.excel.converter.AndroidStringsExcelConverterPlugin.Companion.IMPORT_TASK_NAME
-import io.github.philkes.android.strings.excel.converter.export.ExportToExcelTask
+import io.github.philkes.android.strings.excel.converter.ImportFromExcelTask
+import io.github.philkes.android.translations.converter.AndroidTranslationsConverterPlugin.Companion.EXPORT_TASK_NAME
+import io.github.philkes.android.translations.converter.AndroidTranslationsConverterPlugin.Companion.IMPORT_TASK_NAME
+import io.github.philkes.android.translations.converter.excel.export.ExportToExcelTask
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.gradle.internal.impldep.junit.framework.AssertionFailedError
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -24,11 +24,10 @@ import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.*
 import kotlin.io.path.isRegularFile
-import kotlin.io.path.isSameFileAs
 import kotlin.io.path.name
 
 
-class AndroidStringsExcelConverterPluginTest {
+class AndroidTranslationsConverterPluginTest {
 
     @TempDir
     lateinit var testProjectDir: File
@@ -47,7 +46,7 @@ class AndroidStringsExcelConverterPluginTest {
          import ${ExportToExcelTask::class.java.name}
 
          plugins {
-            id("io.github.philkes.android-strings-excel-converter")
+            id("io.github.philkes.android-translations-converter")
          }
 
          tasks.named<${ExportToExcelTask::class.java.simpleName}>("$EXPORT_TASK_NAME") {
@@ -78,7 +77,7 @@ class AndroidStringsExcelConverterPluginTest {
          import ${ImportFromExcelTask::class.java.name}
 
          plugins {
-            id("io.github.philkes.android-strings-excel-converter")
+            id("io.github.philkes.android-translations-converter")
          }
 
          tasks.named<${ImportFromExcelTask::class.java.simpleName}>("$IMPORT_TASK_NAME") {
