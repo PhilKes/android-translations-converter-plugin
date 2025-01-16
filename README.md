@@ -81,7 +81,7 @@ tasks.named("importTranslationsFromExcel", ImportFromExcelTask) {
     * Folder to import to.
     * For every folder-name/language a subfolder will be created and its corresponding `strings.xml` generated.
     */
-    outputFile = project.file("app/src/main/res/")
+    outputFile = project.file("src/main/res/")
 }
 ```
 

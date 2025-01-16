@@ -19,10 +19,10 @@ abstract class ExportToExcelTask : org.gradle.api.DefaultTask() {
     /**
      * Input path which contains 'strings.xml' (or in subfolders).
      *
-     * (Defaults to `{PROJECT_DIR}/app/src/main/res`)
+     * (Defaults to `{PROJECT_DIR}/src/main/res`)
      */
     @InputDirectory
-    var inputDirectory: File = project.file("app/src/main/res")
+    var inputDirectory: File = project.file("src/main/res")
 
     /**
      * The task is invalidated if any `strings.xml` files contents in the [inputDirectory] and its subfolders change.

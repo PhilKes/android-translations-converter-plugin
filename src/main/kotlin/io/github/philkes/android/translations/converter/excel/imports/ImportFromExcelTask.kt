@@ -31,10 +31,10 @@ open class ImportFromExcelTask : DefaultTask() {
      * Folder to import to.
      * For every folder-name/language a subfolder will be created and its corresponding `strings.xml` generated.
      *
-     * (Defaults to `{PROJECT_DIR}/app/src/main/res/`)
+     * (Defaults to `{PROJECT_DIR}//src/main/res/`)
      */
     @OutputDirectory
-    var outputDirectory: File = project.file("app/src/main/res/")
+    var outputDirectory: File = project.file("src/main/res/")
 
     @TaskAction
     fun import() {

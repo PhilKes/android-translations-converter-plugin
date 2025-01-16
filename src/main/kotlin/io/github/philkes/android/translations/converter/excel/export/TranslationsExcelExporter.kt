@@ -64,14 +64,12 @@ class TranslationsExcelExporter(
         val emptyPluralsCellStyle =
             workbook.createDefaultCellStyle().withColor(EMPTY_PLURALS_CELL_COLOR)
         val hiddenCellStyle = workbook.createDefaultCellStyle().withColor(EMPTY_HIDDEN_CELL_COLOR)
-        val headerCellStyle = workbook.createDefaultCellStyle().apply {
+        val headerCellStyle = workbook.createDefaultCellStyle().withColor(EMPTY_HIDDEN_CELL_COLOR).apply {
             val font = sheet.workbook.createFont().apply {
                 fontName = DEFAULT_FONT
                 bold = true
             }
             setFont(font)
-            setFillForegroundColor(EMPTY_HIDDEN_CELL_COLOR.toColor())
-            fillPattern = FillPatternType.SOLID_FOREGROUND
         }
 
         sheet.apply {
@@ -174,8 +172,8 @@ class TranslationsExcelExporter(
         }
     }
 
-    private fun CellStyle.withColor(value: String): CellStyle {
-        setFillForegroundColor(value.toColor())
+    private fun CellStyle.withColor(value: Short): CellStyle {
+        setFillForegroundColor(value)
         fillPattern = FillPatternType.SOLID_FOREGROUND
         return this
     }
@@ -209,9 +207,9 @@ class TranslationsExcelExporter(
         private const val KEY_COLUMN = "Key"
         private const val TRANSLATABLE_COLUMN = "Translatable"
 
-        private const val EMPTY_CELL_COLOR = "FFCCCC"
-        private const val EMPTY_PLURALS_CELL_COLOR = "ffffcc"
-        private const val EMPTY_HIDDEN_CELL_COLOR = "D3D3D3"
+        private val EMPTY_CELL_COLOR = IndexedColors.CORAL.index
+        private  val EMPTY_PLURALS_CELL_COLOR = IndexedColors.LEMON_CHIFFON.index
+        private  val EMPTY_HIDDEN_CELL_COLOR = IndexedColors.GREY_25_PERCENT.index
 
         private const val DEFAULT_COLUMN_CHARACTER_WIDTH = 50
         private const val KEY_COLUMN_CHARACTER_WIDTH = 40

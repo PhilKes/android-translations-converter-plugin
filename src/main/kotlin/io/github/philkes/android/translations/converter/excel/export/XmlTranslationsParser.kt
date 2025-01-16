@@ -99,7 +99,7 @@ class XmlTranslationsParser(private val progressLogger: ProgressLogger) {
             val child = childNodes.item(i)
             transformer.transform(DOMSource(child), StreamResult(stringWriter))
         }
-        return StringEscapeUtils.unescapeHtml4(stringWriter.toString())
+        return org.apache.commons.text.StringEscapeUtils.unescapeHtml4(stringWriter.toString())
     }
 
 }
