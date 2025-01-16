@@ -45,11 +45,11 @@ class AndroidStringsExcelConverterPluginTest {
     fun exportTranslationsToExcel() {
         val buildFileContent = """
          import ${ExportToExcelTask::class.java.name}
-            
+
          plugins {
             id("io.github.philkes.android-strings-excel-converter")
          }
-         
+
          tasks.named<${ExportToExcelTask::class.java.simpleName}>("$EXPORT_TASK_NAME") {
              inputDirectory = file("${javaClass.classLoader.getResource("app/src/main/res")!!.path}")
          }
@@ -76,11 +76,11 @@ class AndroidStringsExcelConverterPluginTest {
         val outputDirectory = File(testProjectDir, "output")
         val buildFileContent = """
          import ${ImportFromExcelTask::class.java.name}
-            
+
          plugins {
             id("io.github.philkes.android-strings-excel-converter")
          }
-         
+
          tasks.named<${ImportFromExcelTask::class.java.simpleName}>("$IMPORT_TASK_NAME") {
              inputFile = file("${javaClass.classLoader.getResource("expected.xlsx")!!.path}")
              outputDirectory = file("${outputDirectory.path}")

@@ -8,6 +8,7 @@ Useful if your translations are created by non-technical/external translators wh
 * Export from android project's `strings.xml` files to a single, formatted Excel File
 * Import `strings.xml` files from given Excel File into corresponding `values` subfolders
 * Supports [Android quantity strings (plurals)](https://developer.android.com/guide/topics/resources/string-resource#Plurals)
+* Correctly escapes/unescapes special characters + HTML tags in `strings.xml` and Excel
 
 ## Setup
 

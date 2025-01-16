@@ -1,15 +1,21 @@
 package io.github.philkes.android.strings.excel.converter.export
 
 import io.github.philkes.android.strings.excel.converter.*
-import org.gradle.api.logging.Logger
+import org.apache.commons.lang3.StringEscapeUtils
 import org.gradle.internal.logging.progress.ProgressLogger
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import java.io.File
+import java.io.StringWriter
 import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
 
 
 class XmlTranslationsParser(private val progressLogger: ProgressLogger) {
+
 
     fun parse(stringsXmlFiles: Set<File>): AndroidTranslations {
         val sortedFiles = stringsXmlFiles.sortedBy { it.parentFile?.name }
@@ -28,7 +34,7 @@ class XmlTranslationsParser(private val progressLogger: ProgressLogger) {
                     val element = nodeList.item(i)
                     if (element.nodeName == STRING_XML_TAG) {
                         val key = element.name() ?: continue
-                        val text = element.textContent
+                        val text = element.plainValue()
                         translations.getOrPut(key) {
                             AndroidTranslation(mutableMapOf(), element.isTranslatable())
                         }.apply {
@@ -77,6 +83,23 @@ class XmlTranslationsParser(private val progressLogger: ProgressLogger) {
                 isTranslatable = element.isTranslatable()
             }
         }
+    }
+
+    /**
+     * Extracts plain text without escaping or omitting inner HTML/XML tags.
+     */
+    private fun Node.plainValue(): String {
+        val stringWriter = StringWriter()
+        val transformer = TransformerFactory.newInstance().newTransformer().apply {
+            setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+            setOutputProperty(OutputKeys.INDENT, "no")
+            setOutputProperty(OutputKeys.ENCODING, "utf-8")
+        }
+        for (i in 0 until childNodes.length) {
+            val child = childNodes.item(i)
+            transformer.transform(DOMSource(child), StreamResult(stringWriter))
+        }
+        return StringEscapeUtils.unescapeHtml4(stringWriter.toString())
     }
 
 }

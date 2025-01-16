@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about">About</string>
+    <string name="about">About %1$s! .&#127876; &lt;b&gt;Android&lt;/b&gt; .&#129315;</string>
     <string name="add_images">Add images</string>
     <string name="add_item">Add Item</string>
     <string name="add_label">Add label</string>
