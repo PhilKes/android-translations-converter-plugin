@@ -18,7 +18,7 @@ Useful if your translations are created by non-technical/external translators wh
 In `build.gradle`:
 ```groovy
 plugins {
-    id("io.github.philkes.android-translations-converter") version "1.0.0"
+    id("io.github.philkes.android-translations-converter") version "1.0.1"
 }
 ```
 
