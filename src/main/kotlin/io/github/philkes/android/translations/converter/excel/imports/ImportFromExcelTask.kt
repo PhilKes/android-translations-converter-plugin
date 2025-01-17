@@ -15,6 +15,11 @@ import java.io.File
  */
 open class ImportFromExcelTask : DefaultTask() {
 
+    init {
+        description = " Imports Android strings.xml files from a single Excel file."
+        group = "translations"
+    }
+
     /**
      * Input Excel File containing translations.
      * Format:
