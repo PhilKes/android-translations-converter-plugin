@@ -1,4 +1,6 @@
 # Android Translations Converter
+<a href="https://plugins.gradle.org/plugin/io.github.philkes.android-translations-converter"><img alt="Gradle Plugin Portal Version" src="https://img.shields.io/gradle-plugin-portal/v/io.github.philkes.android-translations-converter"></a>
+
 
 Plug'n'Play gradle plugin for your Android projects to convert between Android `strings.xml` translations and Excel.
 Useful if your translations are created by non-technical/external translators who prefer to use Excel.
