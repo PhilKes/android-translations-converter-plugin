@@ -146,22 +146,28 @@ class AndroidTranslationsConverterPluginTest {
     private fun Path.assertContentsEqual(other: Path) {
         Files.walkFileTree(this, object : SimpleFileVisitor<Path>() {
             override fun visitFile(
-                file: Path,
+                path: Path,
                 attrs: BasicFileAttributes
             ): FileVisitResult {
-                val result: FileVisitResult = super.visitFile(file, attrs)
+                val result: FileVisitResult = super.visitFile(path, attrs)
 
-                val relativize: Path = this@assertContentsEqual.relativize(file)
-                val fileInOther: Path = other.resolve(relativize)
-                assertEquals(file.name, fileInOther.name, "File names differ")
-                if(file.isRegularFile()){
-                    assertEquals(file.parent.name, fileInOther.parent.name, "File folders differ")
-                    assertTrue(Files.mismatch(file, fileInOther) == -1L){ file.diff(fileInOther)}
+                val relativize: Path = this@assertContentsEqual.relativize(path)
+                val otherPath: Path = other.resolve(relativize)
+                assertEquals(path.name, otherPath.name, "File names differ")
+                if(path.isRegularFile()){
+                    assertEquals(path.parent.name, otherPath.parent.name, "File folders differ")
+                    assertTrue(path.contentsDiffer(otherPath)){ path.diff(otherPath)}
                 }
                 return result
             }
         })
     }
+}
+
+private fun Path.contentsDiffer(otherFile: Path): Boolean{
+    val bytes1 = Files.readAllBytes(this)
+    val bytes2 = Files.readAllBytes(otherFile)
+    return !bytes1.contentEquals(bytes2)
 }
 
 private fun Path.diff(fileInOther: Path): String {
