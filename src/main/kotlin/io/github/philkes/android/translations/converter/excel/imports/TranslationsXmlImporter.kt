@@ -23,7 +23,7 @@ class TranslationsXmlImporter(private val progressLogger: ProgressLogger) {
                 translation.values.containsKey(language)
             }
 
-            for ((key, androidTranslation) in translationsForLanguage) {
+            for ((key, androidTranslation) in translationsForLanguage.entries.sortedBy { it.key }) {
                 val translationValue = androidTranslation.values[language]
                 val translatable = androidTranslation.isTranslatable
                 if (!translationValue.isNullOrEmpty()) {
