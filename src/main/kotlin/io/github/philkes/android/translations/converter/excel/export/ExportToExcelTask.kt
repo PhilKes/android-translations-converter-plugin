@@ -21,7 +21,7 @@ abstract class ExportToExcelTask : org.gradle.api.DefaultTask() {
      *
      * (Defaults to `{PROJECT_DIR}/src/main/res`)
      */
-    @InputDirectory
+    @Internal
     var inputDirectory: File = project.file("src/main/res")
 
     /**
@@ -29,7 +29,7 @@ abstract class ExportToExcelTask : org.gradle.api.DefaultTask() {
      */
     @InputFiles
     fun getInputFiles(): FileCollection {
-        return project.fileTree(inputDirectory).apply {
+        return project.fileTree(inputDirectory) {
             include("**/strings.xml")
         }
     }
