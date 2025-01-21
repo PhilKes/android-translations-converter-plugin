@@ -1,14 +1,13 @@
 package io.github.philkes.android.translations.converter.excel.export
 
+import groovyjarjarantlr4.v4.gui.PostScriptDocument.DEFAULT_FONT
 import io.github.philkes.android.translations.converter.AndroidTranslation
 import io.github.philkes.android.translations.converter.AndroidTranslations
 import io.github.philkes.android.translations.converter.PLURALS_KEY_MARKER
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
-import org.apache.poi.xssf.usermodel.XSSFColor
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.gradle.internal.logging.progress.ProgressLogger
-import java.awt.Color
 import java.io.File
 
 
@@ -21,14 +20,12 @@ class TranslationsExcelExporter(
             "Exporting ${translations.translations.size} translations to $outputFile",
             "Exporting..."
         )
-        val workbook: Workbook = XSSFWorkbook()
+        val workbook = XSSFWorkbook()
         val sheet = createExcelSheet(translations, workbook)
         if (formatExcel) {
             formatSheet(sheet, translations)
         }
-        outputFile.parentFile?.mkdirs()
-        workbook.write(outputFile.outputStream())
-        workbook.close()
+        workbook.saveReproducible(outputFile)
         progressLogger.completed()
     }
 
@@ -120,8 +117,8 @@ class TranslationsExcelExporter(
         getRow(rowIdx + 1)?.let { row ->
             row.forEach { cell ->
                 if (cell.columnIndex == DEFAULT_LANGUAGE_COLUMN_IDX) {
-                    cell.addComment(
-                        sheet,
+                    sheet.addComment(
+                        cell,
                         "This key is marked as not-translatable, do not add translations in this row."
                     )
                 }
@@ -142,8 +139,8 @@ class TranslationsExcelExporter(
     ) {
         cell.apply {
             if (isPluralKeyWithNoDefaultValue) {
-                addComment(
-                    sheet,
+                sheet.addComment(
+                    this,
                     "The default language does not need/have a translation for the quantity '${
                         key.split(PLURALS_KEY_MARKER)[1]
                     }'.\nIf this language needs a different translation for this quantity, add it, otherwise ignore this row."
@@ -158,50 +155,10 @@ class TranslationsExcelExporter(
         }
     }
 
-    private fun Workbook.createDefaultCellStyle(): CellStyle {
-        return createCellStyle().apply {
-            val font = createFont()
-            font.fontName = DEFAULT_FONT
-            setFont(font)
-            dataFormat = createDataFormat().getFormat("@")
-            borderTop = BorderStyle.THIN
-            borderBottom = BorderStyle.THIN
-            borderLeft = BorderStyle.THIN
-            borderRight = BorderStyle.THIN
-            wrapText = true
-        }
-    }
-
-    private fun CellStyle.withColor(value: Short): CellStyle {
-        setFillForegroundColor(value)
-        fillPattern = FillPatternType.SOLID_FOREGROUND
-        return this
-    }
-
-    private fun String.toColor(): XSSFColor = XSSFColor(Color.decode("#$this"), null)
-
-    private fun Cell.addComment(
-        sheet: Sheet,
-        commentText: String
-    ) {
-        val factory = sheet.workbook.creationHelper
-        val anchor = factory.createClientAnchor()
-        val drawing = sheet.createDrawingPatriarch()
-        val comment = drawing.createCellComment(anchor)
-        comment.string = factory.createRichTextString(commentText).apply {
-            val font = sheet.workbook.createFont().apply {
-                fontName = DEFAULT_FONT
-                fontHeightInPoints = 12
-            }
-            applyFont(font)
-        }
-        cellComment = comment
-    }
 
     companion object {
         private const val DEFAULT_LANGUAGE_COLUMN_IDX = 2
 
-        private const val DEFAULT_FONT = "Calibri"
         private const val WORKBOOK_NAME = "Translations"
 
         private const val KEY_COLUMN = "Key"

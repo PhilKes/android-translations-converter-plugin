@@ -3,15 +3,16 @@
 
 
 Plug'n'Play gradle plugin for your Android projects to convert between Android `strings.xml` translations and Excel.
-Useful if your translations are created by non-technical/external translators who prefer to use Excel.
+Useful if your translations are created by non-technical/external translators who prefer to use Excel/LibreOffice.
 
 ## Features
 
-* Export from Android project's `strings.xml` files to a single, formatted Excel file
+* Export from Android project's `strings.xml` files to a single, formatted, reproducible Excel file (`.xlsx`)
 * Import `strings.xml` files from given Excel file into corresponding `values` subfolders
 * Supports [Android quantity strings (plurals)](https://developer.android.com/guide/topics/resources/string-resource#Plurals)
 * Correctly escapes/unescapes special characters + HTML tags in `strings.xml` and Excel
 * User-Friendly Excel sheet formatting including highlight missing translations, useful auto-filters and comments
+* Auto-Sorts the translations by their key
 
 ## Setup
 
@@ -24,7 +25,9 @@ plugins {
 
 ## Export
 
-Configuration in `build.gradle` (shown values are the defaults):
+Run `./gradlew exportTranslationsToExcel`
+
+Optional configuration in `build.gradle` (shown values are the defaults):
 ```groovy
 tasks.named("exportTranslationsToExcel", ExportToExcelTask) {
     /**
@@ -44,25 +47,25 @@ tasks.named("exportTranslationsToExcel", ExportToExcelTask) {
 }
 ```
 
-Run `./gradlew exportTranslationsToExcel`
-
 ### Example Excel
 
-This is an example exported Excel Sheet:
+To preview a full exported Excel file [download it here](https://github.com/PhilKes/android-translations-converter/raw/refs/heads/main/src/test/resources/expected.xlsx)
+
 <img src="./doc/example_excel.png" alt="example-excel" /> 
 
-To preview a full exported Excel file [click here](https://github.com/PhilKes/android-translations-converter/raw/refs/heads/main/src/test/resources/expected.xlsx)
 
 #### Plurals
 
 Android supports [quantity strings (plurals)](https://developer.android.com/guide/topics/resources/string-resource#Plurals).
-To support these plurals, for every `<plurals>` in the `strings.xml` there are multiple for all of the supported quantities.
+To support these plurals, for every `<plurals>` in the `strings.xml` there are multiple for all the supported quantities.
 The keys for these plurals have appended `_PLURALS_{QUANTITY}` to differentiate them. There is always a row for every possible quantity, doesn't matter if there is an existing translation in a language or not. If the default language does not specify a translations for a certain quantity, this row is highlighted in yellow with a corresponding comment.
 
 
 ## Import
 
-Configuration in `build.gradle` (shown values are the defaults):
+Run `./gradlew importTranslationsFromExcel`
+
+Optional configuration in `build.gradle` (shown values are the defaults):
 ```groovy
 tasks.named("importTranslationsFromExcel", ImportFromExcelTask) {
    /**
@@ -77,8 +80,6 @@ tasks.named("importTranslationsFromExcel", ImportFromExcelTask) {
     outputFile = project.file("src/main/res/")
 }
 ```
-
-Run `./gradlew importTranslationsFromExcel`
 
 To preview the output see [app/src/main/res](./src/test/resources/app/src/main/res) folder
 
@@ -116,4 +117,4 @@ preBuild.dependsOn exportTranslationsToExcel
     }
     preBuild.dependsOn installLocalGitHooks
     ```
-3. Whenever you commit you changes the export Excel will be kept up-to-date
+3. Whenever you commit your changes the exported Excel will be kept up-to-date

@@ -4,9 +4,7 @@ import io.github.philkes.android.strings.excel.converter.ImportFromExcelTask
 import io.github.philkes.android.translations.converter.AndroidTranslationsConverterPlugin.Companion.EXPORT_TASK_NAME
 import io.github.philkes.android.translations.converter.AndroidTranslationsConverterPlugin.Companion.IMPORT_TASK_NAME
 import io.github.philkes.android.translations.converter.excel.export.ExportToExcelTask
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
-import java.io.FileInputStream
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.Path
@@ -62,12 +59,12 @@ class AndroidTranslationsConverterPluginTest {
             .forwardOutput()
             .build()
 
-        assertEquals(SUCCESS, result.task(":$EXPORT_TASK_NAME")?.outcome ?: FAILED, "'$EXPORT_TASK_NAME' gradle task failed")
         val outputFile = File(testProjectDir, "translations.xlsx")
+        val expected = File(javaClass.classLoader.getResource("expected.xlsx")!!.path)
+        assertEquals(SUCCESS, result.task(":$EXPORT_TASK_NAME")?.outcome ?: FAILED, "'$EXPORT_TASK_NAME' gradle task failed")
         assertTrue(outputFile.exists(), "outputFile does not exists")
         assertTrue(outputFile.length() > 0, "outputFile is empty")
-        assertTrue(compareExcelFiles(File(javaClass.classLoader.getResource("expected.xlsx")!!.path),outputFile), "outputFile's contents are not as expected")
-
+        assertTrue(FileUtils.contentEquals(expected, outputFile), "outputFile's byte contents are not equal")
     }
 
     @Test
@@ -103,45 +100,6 @@ class AndroidTranslationsConverterPluginTest {
             File(javaClass.classLoader.getResource("app/src/main/res")!!.path).toPath()
         expectedOutputDirectory.assertContentsEqual(outputDirectory.toPath())
     }
-
-    private fun compareExcelFiles(file1: File, file2: File): Boolean {
-        val workbook1: Workbook = XSSFWorkbook(FileInputStream(file1))
-        val workbook2: Workbook = XSSFWorkbook(FileInputStream(file2))
-        try {
-            if (workbook1.numberOfSheets != workbook2.numberOfSheets) {
-                return false
-            }
-            for (sheetIndex in 0 until workbook1.numberOfSheets) {
-                val sheet1 = workbook1.getSheetAt(sheetIndex)
-                val sheet2 = workbook2.getSheetAt(sheetIndex)
-                if (sheet1.physicalNumberOfRows != sheet2.physicalNumberOfRows) {
-                    return false
-                }
-                for (rowIndex in 0 until sheet1.physicalNumberOfRows) {
-                    val row1 = sheet1.getRow(rowIndex)
-                    val row2 = sheet2.getRow(rowIndex)
-                    if (row1?.physicalNumberOfCells != row2?.physicalNumberOfCells) {
-                        return false
-                    }
-                    for (cellIndex in 0 until row1.physicalNumberOfCells) {
-                        if (!row1.getCell(cellIndex).assertContentsEqual(row2.getCell(cellIndex))) {
-                            return false
-                        }
-                    }
-                }
-            }
-            return true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return false
-        } finally {
-            workbook1.close()
-            workbook2.close()
-        }
-    }
-
-    private fun Cell?.assertContentsEqual(other: Cell?) =
-        this?.stringCellValue?.equals(other?.stringCellValue) ?: false
 
     private fun Path.assertContentsEqual(other: Path) {
         Files.walkFileTree(this, object : SimpleFileVisitor<Path>() {
