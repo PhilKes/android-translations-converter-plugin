@@ -9,11 +9,10 @@ plugins {
 }
 
 group = "io.github.philkes"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
