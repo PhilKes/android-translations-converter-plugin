@@ -24,16 +24,24 @@ class TranslationsXmlImporter(private val progressLogger: ProgressLogger) {
             }
 
             for ((key, androidTranslation) in translationsForLanguage.entries.sortedBy { it.key }) {
-                val translationValue = androidTranslation.values[language]
-                val translatable = androidTranslation.isTranslatable
-                if (!translationValue.isNullOrEmpty()) {
-                    if (key.contains(PLURALS_KEY_MARKER)) {
-                        val (actualKey, quantity) = key.split(PLURALS_KEY_MARKER)
-                        handlePlurals(rootElement, actualKey, translationValue, quantity)
-                    } else {
-                        handleRegularString(xmlDoc, key, translationValue, translatable, rootElement)
+                androidTranslation.values[language]?.let { translationValue ->
+                    if (translationValue.isNotEmpty()) {
+                        val escapedValue = translationValue.escapeForStringsXml()
+                        if (key.contains(PLURALS_KEY_MARKER)) {
+                            val (actualKey, quantity) = key.split(PLURALS_KEY_MARKER)
+                            handlePlurals(rootElement, actualKey, escapedValue, quantity)
+                        } else {
+                            handleRegularString(
+                                xmlDoc,
+                                key,
+                                escapedValue,
+                                androidTranslation.isTranslatable,
+                                rootElement
+                            )
+                        }
                     }
                 }
+
             }
 
             writeXmlToFile(xmlDoc, language, outputDir)

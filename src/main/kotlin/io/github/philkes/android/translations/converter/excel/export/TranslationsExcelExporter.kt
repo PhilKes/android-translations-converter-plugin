@@ -1,9 +1,7 @@
 package io.github.philkes.android.translations.converter.excel.export
 
 import groovyjarjarantlr4.v4.gui.PostScriptDocument.DEFAULT_FONT
-import io.github.philkes.android.translations.converter.AndroidTranslation
-import io.github.philkes.android.translations.converter.AndroidTranslations
-import io.github.philkes.android.translations.converter.PLURALS_KEY_MARKER
+import io.github.philkes.android.translations.converter.*
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -46,7 +44,8 @@ class TranslationsExcelExporter(
             row.createCell(colIndex++).setCellValue(key)
             row.createCell(colIndex++).setCellValue(translation.isTranslatable.toString())
             translations.languageFolders.forEach { folderName ->
-                row.createCell(colIndex++).setCellValue(translation.values[folderName] ?: "")
+                val unescapedValue = translation.values[folderName]?.unescapeForStringsXml() ?: ""
+                row.createCell(colIndex++).setCellValue(unescapedValue)
             }
             progressLogger.progress("Processed ${index+1} of ${translations.translations.size} translations")
         }

@@ -10,7 +10,7 @@ Useful if your translations are created by non-technical/external translators wh
 * Export from Android project's `strings.xml` files to a single, formatted, reproducible Excel file (`.xlsx`)
 * Import `strings.xml` files from given Excel file into corresponding `values` subfolders
 * Supports [Android quantity strings (plurals)](https://developer.android.com/guide/topics/resources/string-resource#Plurals)
-* Correctly escapes/unescapes special characters + HTML tags in `strings.xml` and Excel
+* Correctly escapes/unescapes [special characters](https://developer.android.com/guide/topics/resources/string-resource#escaping_quotes) + HTML tags in `strings.xml` and Excel
 * User-Friendly Excel sheet formatting including highlight missing translations, useful auto-filters and comments
 * Auto-Sorts the translations by their key
 
