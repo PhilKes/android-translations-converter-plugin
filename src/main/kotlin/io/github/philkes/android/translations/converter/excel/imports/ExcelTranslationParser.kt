@@ -29,7 +29,7 @@ class ExcelTranslationParser(private val progressLogger: ProgressLogger) {
 
         for (rowIndex in 1 until sheet.physicalNumberOfRows) {
             val row = sheet.getRow(rowIndex)
-            val keyCell = row.getCell(0)
+            val keyCell = row.getCell(0) ?: continue
             val translatableCell = row.getCell(1)
 
             val key = keyCell.stringCellValue
